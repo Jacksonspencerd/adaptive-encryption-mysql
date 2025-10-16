@@ -101,42 +101,7 @@ user = User("12345", "admin")
 print(user.to_json())
 
 
+# Should send full Json data to cloud users database 
 
-
-
-
-
-
-
-
-
-# # # example of generating JSON output for user key and attributes
-# # import json
-
-# # data to be included in JSON output (one output for user, one for admin)
-# user_id = "USER_ID_PLACEHOLDER"
-# access_level = "ACCESS_LEVEL_PLACEHOLDER"
-# ip_address = "IP_ADDRESS_PLACEHOLDER"
-# user_key = "GENERATED_USER_KEY_PLACEHOLDER"
-# time_stamp = "TIMESTAMP_PLACEHOLDER"
-
-# # create a dictionary to hold the data, to be converted to JSON
-# user_data = {
-#     "user_id": f"{user_id}",
-#     "access_level": f"{access_level}",
-#     "ip_address": f"{ip_address}",
-#     "user_key": f"{user_key}",
-#     "timestamp": f"{time_stamp}"
-# }
-
-# # convert dictionary to JSON string (export to file)
-# json_output = json.dumps(
-#     {"user_id": user_data['user_id'], "user_key": user_data['user_key']}, 
-#     indent=4
-# )
-
-# print(json_output)
-
-# with open('user_key.json', 'w') as json_file:
-#     json_file.write(json_output)
+# user_id, user_key should both be exported to a file for user's local storage. 
 
