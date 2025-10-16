@@ -7,13 +7,15 @@ Employee accessess database on a non-secure / unknown IP address / at 3AM. Data 
 
 ## To-Do
 - [ ] key generator  
-- [ ] key verifier  
+- [ ] key verifier
+- [ ] UserDB
+- [ ] Mock DB
 - [ ] risk scoring module  
     -> four threat levels: (green, yellow, orange, red)  
 - [ ] masking engine:  
     -> mysql has column-level masking so we need to trigger that with python depending on request threat level  
 
-## Internal Database Requirements:
+## Uers Database Requirements:
 ```
 ip_address
 normal_access_window
@@ -22,7 +24,7 @@ pass_key
 access_level
 ```
 
-## External Database Example:
+## Mock Database Example:
 ```
 id
 first_name
