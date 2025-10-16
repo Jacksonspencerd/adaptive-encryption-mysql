@@ -6,21 +6,22 @@ Employee accessess database on a non-secure / unknown IP address / at 3AM. Data 
 
 
 ## To-Do
-- [ ] key generator  
-- [ ] key verifier
+- [ ] key generator (handled in User Class)
+- [ ] key verifier 
 - [ ] UserDB
 - [ ] Mock DB
 - [ ] risk scoring module  
-    -> four threat levels: (green, yellow, orange, red)  
+    -> four threat levels: low (0-25), medium (26-50), high (51-75), critical (76-100)
 - [ ] masking engine:  
-    -> mysql has column-level masking so we need to trigger that with python depending on request threat level  
+    -> mysql has column-level masking so we need to trigger that with python depending on request threat level
+- [ ] Need to store metadata of what columns will be blacked out for what access levels
 
 ## Uers Database Requirements:
 ```
 ip_address
 normal_access_window
-username
-pass_key
+user_id
+user_key
 access_level
 ```
 
@@ -38,3 +39,4 @@ department
 job_title
 salary
 ```
+
