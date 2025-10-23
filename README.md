@@ -2,7 +2,7 @@
 A cloud-deployed MySQL system with dynamic data masking, secure file-based key management, and context based encryption.
 
 ## Use Case:
-Employee accessess database on a non-secure / unknown IP address / at 3AM. Data is dynamically encrypted based on potential 'threat level'.
+Employee accessess database on a non-secure / unknown IP address / at 3AM. Data is dynamically encrypted based on potential 'threat level' (and set RBAC).
 
 
 ## To-Do
