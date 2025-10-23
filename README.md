@@ -57,7 +57,7 @@ my-cloudlab-project/
 └── logs/                        # Optional: log files for queries and login attempts
     └── app.log
 ```
-Notes on this Structure
+### Notes on this Structure
 
 Separation of Concerns
 - controllers handle logic
@@ -94,15 +94,7 @@ Logging / Auditing
 
 
 ## To-Do
-- [ ] key generator (handled in User Class)
-- [ ] key verifier 
-- [ ] UserDB
-- [ ] Mock DB
-- [ ] risk scoring module  
-    -> four threat levels: low (0-25), medium (26-50), high (51-75), critical (76-100)
-- [ ] masking engine:  
-    -> mysql has column-level masking so we need to trigger that with python depending on request threat level
-- [ ] Need to store metadata of what columns will be blacked out for what access levels
+- [ ] everything fam
 
 ## Uers Database Requirements:
 ```
