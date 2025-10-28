@@ -95,8 +95,9 @@ Logging / Auditing
 
 ## To-Do
 - [ ] everything fam
+- [ ] can add mock data to mysql database using phpMyAdmin (hosted in cloud_lab)
 
-## Uers Database Requirements:
+## Users Database Requirements:
 ```
 ip_address
 normal_access_window
