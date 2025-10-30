@@ -6,56 +6,45 @@ Employee accessess database on a non-secure / unknown IP address / at 3AM. Data 
 
 ## generated file system:
 ```perl
-my-cloudlab-project/
+my-ddm-project/
 │
-├── package.json                 # Node.js dependencies and scripts
-├── package-lock.json
-├── README.md                    # Project description, setup instructions
-├── .env                         # Environment variables (DB credentials, secrets)
-├── server.js                    # Main entry point for the Express server
+├── backend/                        # Node.js / Express API
+│   ├── package.json
+│   ├── server.js                   # Entry point
+│   ├── .env                        # DB creds, JWT secret
+│   │
+│   ├── config/
+│   │   └── db.js                   # MariaDB connection pool
+│   │
+│   ├── controllers/
+│   │   └── queryController.js      # Handles /query requests
+│   │
+│   ├── middleware/
+│   │   └── maskMiddleware.js       # Applies masking to rows
+│   │
+│   ├── routes/
+│   │   └── queryRoutes.js          # Express routes (/query)
+│   │
+│   ├── utils/
+│   │   ├── sqlValidator.js         # Only allow SELECT queries
+│   │   └── maskUtils.js            # Masking functions
+│   │
+│   └── logs/
+│       └── app.log                 # Query logs (optional)
 │
-├── config/                      # Configuration files
-│   ├── db.js                    # MySQL connection config
-│   └── threatConfig.js          # Threat scoring weights and thresholds
-│
-├── controllers/                 # Express route handlers
-│   ├── authController.js        # Login, session, threat score
-│   └── queryController.js       # Query execution, masking logic
-│
-├── middleware/                  # Middleware functions
-│   ├── authMiddleware.js        # Session/token validation
-│   ├── threatMiddleware.js      # Compute threat score
-│   └── maskMiddleware.js        # Mask query results based on role + threat
-│
-├── models/                      # Database interaction
-│   ├── userModel.js             # authdb queries (users, logins)
-│   └── dataModel.js             # mockdata queries (SELECT only)
-│
-├── routes/                      # API routes
-│   ├── authRoutes.js            # /login route
-│   └── queryRoutes.js           # /query route
-│
-├── public/                      # Static frontend files
-│   ├── index.html               # Login page / main UI
-│   ├── dashboard.html           # Query page with table display
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       ├── login.js             # Handles login form submission
-│       └── query.js             # Handles query submission & table rendering
-│
-├── utils/                       # Helper functions
-│   ├── sqlValidator.js          # Ensures queries are SELECT only
-│   ├── maskUtils.js             # Functions for column masking
-│   └── logger.js                # Optional query/login logging
-├── data/                     # **New folder for seed data**
-│   └── mockdata.json         # Your static mock data
-│
-├── scripts/                  # **New folder for DB setup scripts**
-│   └── seedMockData.js       # Reads mockdata.json and inserts into MySQL
-│
-└── logs/                        # Optional: log files for queries and login attempts
-    └── app.log
+└── frontend/                       # React app
+    ├── package.json
+    ├── public/
+    │   └── index.html
+    │
+    └── src/
+        ├── App.js                  # Main component
+        ├── components/
+        │   ├── QueryInput.js       # Text box + submit
+        │   └── ResultsTable.js     # Table for displaying results
+        │
+        └── index.js                # React entry point
+
 ```
 ### Notes on this Structure
 
