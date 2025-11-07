@@ -10,17 +10,34 @@ app.use(express.json());
 app.use(cors({ origin: "http://localhost:3001" })); // For local dev
 
 const pool = require("./helpers/dbConnecter");
+const calculateRisk = require("./helpers/riskEvaluator");
 
 app.post("/api/query", async (req, res) => {
   const { query } = req.body;
-  console.log("Running SQL:", query);
+  const risk = calculateRisk(req);
 
   try {
     const [rows] = await pool.query(query);
-    res.json({ rows });
-  } catch (err) {
-    console.error("SQL Error:", err.message);
-    res.status(500).json({ error: "Query failed", details: err.message });
+
+    // Mask sensitive data if risk is high
+    const maskedRows = rows.map((row) => {
+      if (risk.masked) {
+        const copy = { ...row };
+        for (const key of Object.keys(copy)) {
+          const lower = key.toLowerCase();
+          if (lower.includes("ssn") || lower.includes("creditcard") || lower.includes("password")) {
+            copy[key] = "****MASKED****";
+          }
+        }
+      return copy;
+      }
+      return row;
+  });
+    console.log("Risk results sent to client:", risk);
+    res.json({ risk, rows: maskedRows });
+  } catch (error) {
+    console.error("SQL error:", error);
+    res.status(500).json({ error: "SQL Query Failed", details: error.message });
   }
 });
 

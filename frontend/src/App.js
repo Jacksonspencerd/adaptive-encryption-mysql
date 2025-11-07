@@ -5,7 +5,7 @@ import ResultsTable from "./components/ResultsTable";
 import "./App.css";
 
 function App() {
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState({ rows: [], risk: null });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -14,7 +14,8 @@ function App() {
       setLoading(true);
       setError("");
       const res = await client.post("/query", { query });
-      setResults(res.data.rows || []);
+      console.log("Response data:", res.data);
+      setResults(res.data);
     } catch (err) {
       console.error(err);
       setError("Error running query");
@@ -25,11 +26,19 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Context-Aware Dynamic Data Masking</h1>
+      <h1>Context-Aware DDM</h1>
       <QueryForm onQuery={handleQuery} />
       {loading && <p>Running query...</p>}
       {error && <p className="error">{error}</p>}
-      <ResultsTable data={results} />
+      {results.risk && (
+        <p>
+          Risk Score: <strong>{results.risk.score}</strong>{" "}
+          {results.risk.masked && (
+            <span style={{ color: "red" }}>Masking Applied Due to High Risk</span>
+          )}
+        </p>
+      )}
+      <ResultsTable data={results.rows || []} />
     </div>
   );
 }
