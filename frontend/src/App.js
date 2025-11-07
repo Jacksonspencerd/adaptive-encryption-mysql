@@ -1,45 +1,45 @@
-import { useState } from "react";
-import client from "./api/client";
-import QueryForm from "./components/QueryForm";
-import ResultsTable from "./components/ResultsTable";
-import "./App.css";
+import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./components/Login";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
-  const [results, setResults] = useState({ rows: [], risk: null });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleQuery = async (query) => {
-    try {
-      setLoading(true);
-      setError("");
-      const res = await client.post("/query", { query });
-      console.log("Response data:", res.data);
-      setResults(res.data);
-    } catch (err) {
-      console.error(err);
-      setError("Error running query");
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
 
   return (
-    <div className="app">
-      <h1>Context-Aware DDM</h1>
-      <QueryForm onQuery={handleQuery} />
-      {loading && <p>Running query...</p>}
-      {error && <p className="error">{error}</p>}
-      {results.risk && (
-        <p>
-          Risk Score: <strong>{results.risk.score}</strong>{" "}
-          {results.risk.masked && (
-            <span style={{ color: "red" }}>Masking Applied Due to High Risk</span>
-          )}
-        </p>
-      )}
-      <ResultsTable data={results.rows || []} />
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            isLoggedIn ? (
+              <Navigate to="/dashboard" />
+            ) : (
+              <Login onLogin={() => setIsLoggedIn(true)} />
+            )
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            isLoggedIn ? (
+              <Dashboard onLogout={() => setIsLoggedIn(false)} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        {/* Default route */}
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </Router>
   );
 }
 

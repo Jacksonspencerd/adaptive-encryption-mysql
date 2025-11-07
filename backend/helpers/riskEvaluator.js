@@ -1,46 +1,77 @@
-// calculates a threat score based on contextual factors
+// backend/helpers/riskEvaluator.js
+// Calculates contextual risk based on user, login history, and environment
 
-//backend/helpers/riskEvaluator.js
-const threatConfig = require('./threatConfig');
+const pool = require("./dbConnecter");
+const threatConfig = require("./threatConfig");
+const knownIPs = ["127.0.0.1", "::1"];
 
-// random demo IP
-const knownIPs = ['127.0.0.1', '::1'];
+async function calculateRisk(req) {
+  const { weights, threshold } = threatConfig;
+  let riskScore = 0.0;
 
-function calculateRisk(req) {
-    const weights = threatConfig.weights;
-    let riskScore = 0;
+  // -------------------------------
+  // IP Reputation / Source
+  // -------------------------------
+  const ip = req.ip || req.connection?.remoteAddress || "";
+  const ipUnknown = !knownIPs.includes(ip);
+  if (ipUnknown) riskScore += weights.ipReputation || weights.ipUnknown;
 
-    // IP Address Check
-    const ip = req.ip || req.connection.remoteAddress;
-    const ipUnknown = !knownIPs.includes(ip);
-    if (ipUnknown) {
-        riskScore += weights.ipUnknown;
+  // -------------------------------
+  // Time-based anomalies
+  // -------------------------------
+  const hour = new Date().getHours();
+  const timeAnomaly = hour < 6 || hour > 22; // 10PM–6AM window
+  if (timeAnomaly) riskScore += weights.timeAnomaly;
+
+  // -------------------------------
+  // Failed logins (from DB)
+  // -------------------------------
+  let failedLogins = 0;
+  try {
+    if (req.user?.id) {
+      const [rows] = await pool.query(
+        `SELECT COUNT(*) AS failures
+         FROM login_audit
+         WHERE user_id = ? AND success = 0
+         AND timestamp >= NOW() - INTERVAL 1 HOUR`,
+        [req.user.id]
+      );
+      failedLogins = rows[0].failures || 0;
     }
+  } catch (err) {
+    console.error("RiskEvaluator DB error:", err.message);
+  }
+  const excessiveFailures = failedLogins >= 3;
+  if (excessiveFailures) riskScore += weights.failedLogins;
 
-    // Time Anomaly Check
-    const hour = new Date().getHours();
-    const timeAnomaly = (hour < 6 || hour > 22); // Unusual access time between 10 PM and 6 AM
-    if (timeAnomaly) {
-        riskScore += weights.timeAnomaly;
-    }
+  // -------------------------------
+  // Privilege level
+  // -------------------------------
+  const privilegeLevel = req.user?.role || "guest";
+  const elevatedPrivilege =
+    privilegeLevel === "admin" ||
+    privilegeLevel === "analyst" ||
+    privilegeLevel === "superuser";
 
-    // Failed Login Attempts Check
-    const failedLogins = req.failedLogins || 0;
-    if (failedLogins >= 3) {
-        riskScore += weights.failedLogins;
-    }
+  if (elevatedPrivilege) riskScore += weights.privilegeLevel;
 
-    // Privilege Level Check
-    const privilegeLevel = req.user ? req.user.privilegeLevel : 'guest';
-    if (privilegeLevel === 'admin' || privilegeLevel === 'superuser') {
-        riskScore += weights.privelegeLevel;
-    }
+  // -------------------------------
+  // Normalize
+  // -------------------------------
+  if (riskScore > 1) riskScore = 1;
 
-    return {
-        riskScore: Number(riskScore.toFixed(2)),
-        masked: riskScore >= threatConfig.threshold,
-        details: { ip, ipUnknown, timeAnomaly, failedLogins, privilegeLevel }
-    };
+  return {
+    riskScore: Number(riskScore.toFixed(2)),
+    masked: riskScore >= threshold,
+    details: {
+      ip,
+      ipUnknown,
+      timeAnomaly,
+      failedLogins,
+      privilegeLevel,
+      elevatedPrivilege,
+    },
+  };
 }
 
 module.exports = calculateRisk;

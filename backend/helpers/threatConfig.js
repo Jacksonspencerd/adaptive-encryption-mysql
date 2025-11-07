@@ -1,11 +1,13 @@
-// defines weights for contextual risk factors
-
+// backend/helpers/threatConfig.js
 module.exports = {
-    weights: {
-        ipUnknown: 0.4,       // Unknown IP address
-        timeAnomaly: 0.3,     // Unusual access time
-        failedLogins: 0.2,    // Multiple failed login attempts
-        privelegeLevel: 0.5,  // Privilege of user
-    },
-    threshold: 0.6          // Risk score threshold for action
+  weights: {
+    ipReputation: 0.25,
+    timeAnomaly: 0.15,
+    failedLogins: 0.20,
+    privilegeLevel: 0.10,
+    sessionAge: 0.10,
+    deviceChange: 0.10,
+    dataSensitivity: 0.10,
+  },
+  threshold: 0.6,
 };
