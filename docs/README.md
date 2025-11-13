@@ -6,10 +6,8 @@ Employee accessess database on a non-secure / unknown IP address / at 3AM. Data 
 
 ## To-Do
 - [ ] Put on cloudlab
-- [ ] Create threat model
-- [ ] Create masking trigger
-- [ ] Create login / RBAC
-- [ ] Get threat data from user device
+- [ ] write out instructions for registration and use
+- [ ] risk score not updating visually -> admin has 0.1, user has 0
 
 ## Users Database Requirements:
 ```
