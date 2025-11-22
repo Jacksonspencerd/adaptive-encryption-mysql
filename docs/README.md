@@ -9,13 +9,25 @@ Employee accessess database on a non-secure / unknown IP address / at 3AM. Data 
 - [ ] write out instructions for registration and use
 - [ ] risk score not updating visually -> admin has 0.1, user has 0
 
+### User Registration
+POST /api/auth/register
+
+Content-Type application/json
+
+ex:
+{
+    "username" : 'username',
+    "password" : 'password',
+    "role" : 'role' || guest is default
+}
+
 ## Users Database Requirements:
 ```
-ip_address
-normal_access_window
-user_id
-user_key
-access_level
+id
+username
+pass_hash
+role
+created_at
 ```
 
 ## Mock Database Example:

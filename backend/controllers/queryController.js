@@ -27,31 +27,36 @@ exports.runQuery = async (req, res) => {
 
   // Hard-deny for "threat" role
   if (req.user.role === "threat") {
-    return res.status(403).json({
-      error: "Access denied for threat role",
-    });
+    return res.status(403).json({ error: "Access denied for threat role" });
   }
 
   try {
-    // Execute SQL (read-only, thanks to the guard above)
+    // Execute SQL (read-only)
     const [rows] = await pool.query(query);
 
     // Compute mask level using role + risk (set by riskEvaluator middleware)
     const maskLevel = getMaskLevel(req.user.role, req.riskLevel);
 
-    // Apply masking to each row
+    // Apply masking
     const maskedRows = rows.map((row) => applyMasking(row, maskLevel));
 
-    res.json({
-      role: req.user.role,
-      threatScore: req.threatScore,
-      riskLevel: req.riskLevel,
-      maskLevel,
+    // Send response in structure expected by frontend
+    return res.json({
       rows: maskedRows,
+
+      risk: {
+        threatScore: req.threatScore,
+        riskLevel: req.riskLevel,
+        maskLevel,
+        masked: maskLevel !== "none"
+      },
+
+      role: req.user.role
     });
+
   } catch (err) {
     console.error("SQL error:", err);
-    res.status(500).json({
+    return res.status(500).json({
       error: "Query failed",
       details: err.message,
     });

@@ -36,14 +36,16 @@ export default function Dashboard({ onLogout }) {
       {results.risk && (
         <p>
           Risk Score:{" "}
-          <strong>{results.risk.riskScore}</strong>{" "}
+          <strong>{results.risk.threatScore.toFixed(2)}</strong>{" "}
           {results.risk.masked && (
-            <span style={{ color: "red" }}>⚠ Masking Applied</span>
+            <span style={{ color: "red" }}>Masking Applied</span>
           )}
         </p>
+        
       )}
 
       <ResultsTable data={results.rows || []} />
     </div>
+    
   );
 }
