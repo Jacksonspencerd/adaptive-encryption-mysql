@@ -7,6 +7,10 @@ const riskEvaluator = require("../helpers/riskEvaluator");
 const { runQuery } = require("../controllers/queryController");
 
 
-router.post("/", authenticateToken, riskEvaluator, runQuery);
+router.post(
+    "/", 
+    authenticateToken, 
+    riskEvaluator, 
+    runQuery);
 
 module.exports = router;

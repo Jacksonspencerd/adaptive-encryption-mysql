@@ -1,5 +1,6 @@
 import { useState } from "react";
 import client from "../api/client";
+import { getDeviceFingerprint } from "../utils/deviceFingerprint";
 
 export default function Login({ onLogin }) {
   const [username, setUsername] = useState("");
@@ -9,8 +10,18 @@ export default function Login({ onLogin }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+
     try {
-      const res = await client.post("/auth/login", { username, password });
+      // 🔐 NEW: collect device fingerprint
+      const device = getDeviceFingerprint();
+
+      // 🔐 Send device info along with login
+      const res = await client.post("/auth/login", { 
+        username, 
+        password, 
+        device 
+      });
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
       onLogin(); // trigger redirect to dashboard
@@ -23,6 +34,7 @@ export default function Login({ onLogin }) {
   return (
     <div className="login-container">
       <h2>Login</h2>
+
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -31,6 +43,7 @@ export default function Login({ onLogin }) {
           onChange={(e) => setUsername(e.target.value)}
           required
         />
+
         <input
           type="password"
           placeholder="Password"
@@ -38,8 +51,10 @@ export default function Login({ onLogin }) {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+
         <button type="submit">Login</button>
       </form>
+
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );

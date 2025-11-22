@@ -1,42 +1,32 @@
 // helpers/riskEvaluator.js
-// GitHub Copilot
 // Middleware to compute a simple risk/threat score for the current request based on:
 // - IP address history (anomaly if current IP not seen recently)
 // - Request time vs configured business hours
 // - Recent failed login attempts
 // - User role privilege (sensitivity)
-// The computed score and derived risk level are attached to `req` as `req.threatScore` and `req.riskLevel`.
-// On any error or if no authenticated user is present, defaults are applied (score 0, level "none").
+// - Device fingerprint anomaly (new/unknown device)
+// Attaches `req.threatScore` and `req.riskLevel` (none|low|medium|high).
 
-const pool = require("./dbConnecter"); // MySQL connection pool using promise interface
+const pool = require("./dbConnecter");
 const {
   weights,
   thresholds,
   businessHours,
   maxFailedLoginsSafe,
-} = require("./threatConfig"); // configuration for scoring, thresholds, etc.
+} = require("./threatConfig");
+const { hashDevice } = require("./deviceFingerprint");
 
 /**
  * Extract the client's IP address from the request.
- * Prefers X-Forwarded-For (first entry) and falls back to socket remoteAddress.
- * Strips IPv6-mapped IPv4 prefix (::ffff:) when present.
- *
- * @param {IncomingMessage} req - Express request
- * @returns {string} ip address or empty string
  */
 function getClientIp(req) {
   const xff = req.headers["x-forwarded-for"];
   if (xff) return xff.split(",")[0].trim();
-  // socket may be undefined in some test environments; use optional chaining
   return (req.socket?.remoteAddress || "").replace("::ffff:", "");
 }
 
 /**
  * Map a user role to a normalized privilege/sensitivity score (0..1).
- * Higher means more sensitive (contributes more to threat).
- *
- * @param {string} role - role name from req.user
- * @returns {number} privilege score in range [0,1]
  */
 function roleToPrivilegeScore(role) {
   const privilege = {
@@ -46,23 +36,9 @@ function roleToPrivilegeScore(role) {
     guest: 0.3,
     threat: 0.1,
   };
-  // default to a moderate-low value if unknown role provided
   return privilege[role] ?? 0.3;
 }
 
-/**
- * Express middleware to evaluate risk for the incoming request.
- * Attaches `req.threatScore` (number) and `req.riskLevel` (string: none|low|medium|high).
- *
- * Flow:
- *  - If unauthenticated (no req.user), set defaults and continue.
- *  - Fetch recent successful login IPs for the user and mark if current IP is unknown.
- *  - Compute time anomaly based on configured business hours.
- *  - Count recent failed logins (last hour) and normalize against safe threshold.
- *  - Lookup role sensitivity and combine all signals using configured weights.
- *  - Round score to 2 decimals and map to risk level using configured thresholds.
- *  - On any DB or runtime error, log and set safe defaults.
- */
 module.exports = async function riskEvaluator(req, res, next) {
   // If there is no authenticated user, treat as no risk and continue.
   if (!req.user) {
@@ -77,8 +53,6 @@ module.exports = async function riskEvaluator(req, res, next) {
     const currentIp = getClientIp(req);
 
     // --- 1. IP anomaly ------------------------------------------
-    // If the current IP is not among the user's last few successful login IPs,
-    // mark as unknown. We only consider up to 5 recent successful login IPs.
     let ipUnknown = 0;
     const [ipRows] = await pool.query(
       `SELECT DISTINCT ip_address
@@ -89,60 +63,94 @@ module.exports = async function riskEvaluator(req, res, next) {
       [userId]
     );
 
-    if (ipRows.length > 0 && !ipRows.some(r => r.ip_address === currentIp)) {
+    if (ipRows.length > 0 && !ipRows.some((r) => r.ip_address === currentIp)) {
       ipUnknown = 1;
     }
 
     // --- 2. Time anomaly -----------------------------------------
-    // If the request occurs outside configured business hours, flag it.
     const hour = new Date().getHours();
     const timeAnomaly =
       hour < businessHours.start || hour >= businessHours.end ? 1 : 0;
 
     // --- 3. Failed logins ----------------------------------------
-    // Count failed login attempts for this user during the last hour and
-    // normalize to a 0..1 score using maxFailedLoginsSafe.
     const [failRows] = await pool.query(
       `SELECT COUNT(*) AS cnt
        FROM login_audit
        WHERE user_id = ?
          AND success = 0
-         AND timestamp > NOW() - INTERVAL 1 HOUR`,
+         AND timestamp > (NOW() - INTERVAL 1 HOUR)`,
       [userId]
     );
 
     const fails = failRows[0]?.cnt || 0;
-    // prevent division by zero and clamp to 1
-    const failedLoginScore = Math.min(fails / maxFailedLoginsSafe, 1);
+    const failedLoginScore = Math.min(
+      maxFailedLoginsSafe > 0 ? fails / maxFailedLoginsSafe : 0,
+      1
+    );
 
-    // --- 4. Role sensitivity -------------------------------------
+    // --- 4. Device anomaly ---------------------------------------
+    // Expect the frontend to send req.body.device when calling /query
+    let deviceAnomaly = 0;
+    const device = req.body?.device;
+
+    if (device && typeof device === "object") {
+      const deviceHash = hashDevice(device);
+
+      // See if this device is already known for this user
+      const [knownDevices] = await pool.query(
+        `SELECT id FROM user_devices
+         WHERE user_id = ? AND device_hash = ?`,
+        [userId, deviceHash]
+      );
+
+      if (knownDevices.length === 0) {
+        // Unknown/new device -> anomaly
+        deviceAnomaly = 1;
+
+        // Optionally register this device as "known" for future requests
+        await pool.query(
+          `INSERT INTO user_devices (user_id, device_hash)
+           VALUES (?, ?)`,
+          [userId, deviceHash]
+        );
+      } else {
+        deviceAnomaly = 0;
+        // Update last_seen
+        await pool.query(
+          `UPDATE user_devices SET last_seen = CURRENT_TIMESTAMP WHERE id = ?`,
+          [knownDevices[0].id]
+        );
+      }
+    }
+
+    // --- 5. Role sensitivity -------------------------------------
     const privilegeScore = roleToPrivilegeScore(role);
 
-    // --- 5. Weighted composite score ------------------------------
-    // Combine signals using configured weights. The expected weights object
-    // should contain numeric multipliers for each signal.
+    // --- 6. Weighted composite score -----------------------------
     const rawScore =
-      weights.ipUnknown * ipUnknown +
-      weights.timeAnomaly * timeAnomaly +
-      weights.failedLogins * failedLoginScore +
-      weights.privilege * privilegeScore;
+      (weights.ipUnknown || 0) * ipUnknown +
+      (weights.timeAnomaly || 0) * timeAnomaly +
+      (weights.failedLogins || 0) * failedLoginScore +
+      (weights.privilege || 0) * privilegeScore +
+      (weights.deviceChange || 0) * deviceAnomaly;
 
-    // Round to 2 decimals for readability/storage
     const threatScore = Number(rawScore.toFixed(2));
 
-    // Map numeric score to risk level using configured thresholds
+    // Map score to level
     let riskLevel = "none";
     if (threatScore >= thresholds.high) riskLevel = "high";
     else if (threatScore >= thresholds.medium) riskLevel = "medium";
     else if (threatScore >= thresholds.low) riskLevel = "low";
 
-    // Attach computed values to the request for downstream middleware/handlers
     req.threatScore = threatScore;
     req.riskLevel = riskLevel;
 
+    console.log(
+      `Computed threat score: ${threatScore} Risk level: ${riskLevel}`
+    );
+
     next();
   } catch (err) {
-    // On error, log and safely continue with no risk
     console.error("riskEvaluator error:", err);
     req.threatScore = 0;
     req.riskLevel = "none";
