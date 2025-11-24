@@ -12,10 +12,10 @@ export default function Login({ onLogin }) {
     setError("");
 
     try {
-      // 🔐 NEW: collect device fingerprint
+      // NEW: collect device fingerprint
       const device = getDeviceFingerprint();
 
-      // 🔐 Send device info along with login
+      // Send device info along with login
       const res = await client.post("/auth/login", { 
         username, 
         password, 

@@ -18,7 +18,7 @@ export default function Dashboard({ onLogout }) {
 
       const res = await client.post("/query", { 
         query,
-        device,     // ✔ send device fingerprint
+        device,     // send device fingerprint
       });
 
       setResults(res.data);
