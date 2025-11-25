@@ -5,13 +5,14 @@ A cloud-deployed MySQL system with dynamic data masking, secure file-based key m
 Employee accessess database on a non-secure / unknown IP address / at 3AM. Data is dynamically encrypted based on potential 'threat level' (and set RBAC).
 
 ## To-Do
-- [ ] Put on cloudlab
-- [ ] write out instructions for registration and use
-- [ ] risk score not updating visually -> admin has 0.1, user has 0
+- [x] Put on cloudlab
+- [x] write out instructions for registration and use
+- [x] risk score not updating visually -> admin has 0.1, user has 0
 
 ### User Registration
 POST /api/auth/register
 
+Headers:
 Content-Type application/json
 
 ex:

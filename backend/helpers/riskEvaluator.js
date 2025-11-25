@@ -31,9 +31,9 @@ function getClientIp(req) {
 function roleToPrivilegeScore(role) {
   const privilege = {
     admin: 1.0,
-    analyst: 0.7,
-    user: 0.5,
-    guest: 0.3,
+    analyst: 0.5,
+    user: 0.3,
+    guest: 0.2,
     threat: 0.1,
   };
   return privilege[role] ?? 0.3;

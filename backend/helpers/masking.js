@@ -30,60 +30,74 @@ function looksLikeGenderKey(key) {
 
 function maskSSN(ssn) {
   if (!ssn) return ssn;
-  const digits = String(ssn).replace(/\D/g, "");
-  if (digits.length < 4) return "XXX-XX-XXXX";
-  return `XXX-XX-${digits.slice(-4)}`;
+  // Strong SSN masking: always hide full value
+  return "REDACTED";
 }
 
 function maskSalary(salary) {
   if (salary == null) return salary;
-  const num = Number(salary);
-  if (Number.isNaN(num)) return "REDACTED";
-  const lower = Math.floor(num / 10000) * 10000;
-  const upper = lower + 9999;
-  return `$${lower.toLocaleString()}–$${upper.toLocaleString()}`;
+  // Strong salary masking: hide exact amount, replace with generic token
+  return "REDACTED";
 }
 
 function maskEmail(email) {
   if (!email) return email;
+  // For high risk we will override this with "REDACTED" anyway.
   const [user, domain] = String(email).split("@");
-  if (!domain) return "***@***";
-  const maskedUser = user[0] + "***";
+  if (!domain) return "********";
+  const maskedUser = user[0] + "****";
   return `${maskedUser}@${domain}`;
 }
 
 function maskPhone(phone) {
   if (!phone) return phone;
   const digits = String(phone).replace(/\D/g, "");
-  if (digits.length < 4) return "****";
+  if (digits.length < 4) return "********";
   const last4 = digits.slice(-4);
   return `(***) ***-${last4}`;
 }
 
 // === Role + risk → maskLevel ===================================
+//
+// Levels:
+//   - "none"   : no masking at all
+//   - "low"    : only SSN masked
+//   - "medium" : SSN, salary, race fully redacted, gender bucketed
+//   - "high"   : very aggressive – redact almost everything
+//
+// Policy change (Option C):
+//   - Admin is ONLY unmasked at riskLevel === "none".
+//   - Admin at "medium" or "high" risk is heavily masked ("high").
+//   - High risk always wins, regardless of role.
+//
 
 function getMaskLevel(role, risk) {
-  // Risk dominates: high risk => high masking no matter what
+  // High risk → maximal masking regardless of role
   if (risk === "high") return "high";
 
-  // Medium risk escalates masking for non-admins
+  // Medium risk:
   if (risk === "medium") {
-    if (role === "admin" || role === "analyst") return "medium";
+    // Admin at medium risk gets *high* masking (very defensive)
+    if (role === "admin") return "high";
+    // Analysts at medium risk get medium masking (can still see some quasi-IDs)
+    if (role === "analyst") return "medium";
+    // Normal users / guests / threat at medium → high masking
     return "high";
   }
 
   // Low / none risk: role-based defaults
+  // (Only here can admin see fully unmasked data.)
   switch (role) {
     case "admin":
-      return "none";
+      return "none";      // Fully trusted, low/no risk
     case "analyst":
-      return "low";
+      return "low";       // Can see structure, SSN masked
     case "user":
-      return "medium";
+      return "medium";    // See basic info, sensitive fully masked
     case "guest":
     case "threat":
     default:
-      return "high";
+      return "high";      // Very restricted view
   }
 }
 
@@ -94,10 +108,12 @@ function applyMasking(row, maskLevel) {
 
   const masked = { ...row };
 
-  // LOW: only most sensitive like SSN
+  // LOW: only most sensitive like SSN are fully masked
   if (maskLevel === "low") {
     for (const [key, value] of Object.entries(masked)) {
-      if (looksLikeSSNKey(key)) masked[key] = maskSSN(value);
+      if (looksLikeSSNKey(key)) {
+        masked[key] = maskSSN(value);
+      }
     }
     return masked;
   }
@@ -105,26 +121,43 @@ function applyMasking(row, maskLevel) {
   // MEDIUM: SSN + salary + some demographic redaction
   if (maskLevel === "medium") {
     for (const [key, value] of Object.entries(masked)) {
-      if (looksLikeSSNKey(key)) masked[key] = maskSSN(value);
-      else if (looksLikeSalaryKey(key)) masked[key] = maskSalary(value);
-      else if (looksLikeRaceKey(key)) masked[key] = "REDACTED";
-      else if (looksLikeGenderKey(key)) {
+      if (value == null) continue;
+
+      if (looksLikeSSNKey(key)) {
+        masked[key] = maskSSN(value);
+      } else if (looksLikeSalaryKey(key)) {
+        masked[key] = maskSalary(value);
+      } else if (looksLikeRaceKey(key)) {
+        masked[key] = "REDACTED";
+      } else if (looksLikeGenderKey(key)) {
+        // Bucket gender to first letter, not full value
         masked[key] = value ? String(value)[0] + "." : value;
       }
+      // Non-sensitive fields (e.g., id, first_name, last_name, department)
+      // remain visible at medium level.
     }
     return masked;
   }
 
-  // HIGH: very aggressive – redact strings, heavily obfuscate contact info
+  // HIGH: very aggressive – redact almost everything
   for (const [key, value] of Object.entries(masked)) {
     if (value == null) continue;
 
-    if (looksLikeSSNKey(key)) masked[key] = "REDACTED";
-    else if (looksLikeSalaryKey(key)) masked[key] = "REDACTED";
-    else if (looksLikeEmailKey(key)) masked[key] = maskEmail(value);
-    else if (looksLikePhoneKey(key)) masked[key] = maskPhone(value);
-    else if (looksLikeRaceKey(key) || looksLikeGenderKey(key)) masked[key] = "REDACTED";
-    else if (typeof value === "string") masked[key] = "REDACTED";
+    if (looksLikeSSNKey(key)) {
+      masked[key] = "REDACTED";
+    } else if (looksLikeSalaryKey(key)) {
+      masked[key] = "REDACTED";
+    } else if (looksLikeEmailKey(key)) {
+      masked[key] = "REDACTED";
+    } else if (looksLikePhoneKey(key)) {
+      masked[key] = "REDACTED";
+    } else if (looksLikeRaceKey(key) || looksLikeGenderKey(key)) {
+      masked[key] = "REDACTED";
+    } else if (typeof value === "string") {
+      // Names, job_title, department, etc.
+      masked[key] = "REDACTED";
+    }
+    // Numeric ids can remain if you want; you could also redact them if desired.
   }
 
   return masked;

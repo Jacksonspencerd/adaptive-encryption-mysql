@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const SECRET = process.env.JWT_SECRET || "supersecret_dev_key";
 
 function authenticateToken(req, res, next) {
+  console.log("Incoming headers:", req.headers);
+
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Missing token" });
