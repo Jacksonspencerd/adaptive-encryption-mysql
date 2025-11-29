@@ -12,19 +12,18 @@ export default function Login({ onLogin }) {
     setError("");
 
     try {
-      // NEW: collect device fingerprint
       const device = getDeviceFingerprint();
 
-      // Send device info along with login
-      const res = await client.post("/auth/login", { 
-        username, 
-        password, 
-        device 
+      const res = await client.post("/auth/login", {
+        username,
+        password,
+        device,
       });
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
-      onLogin(); // trigger redirect to dashboard
+
+      onLogin();
     } catch (err) {
       console.error(err);
       setError("Invalid username or password");
@@ -32,30 +31,43 @@ export default function Login({ onLogin }) {
   }
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="card shadow-sm p-4" style={{ width: "350px" }}>
+        <h3 className="text-center mb-3">Sign In</h3>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
+        {error && (
+          <div className="alert alert-danger py-2">{error}</div>
+        )}
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label">Username</label>
+            <input
+              type="text"
+              className="form-control"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              autoFocus
+            />
+          </div>
 
-        <button type="submit">Login</button>
-      </form>
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+          <button type="submit" className="btn btn-primary w-100 mt-2">
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -16,9 +16,9 @@ export default function Dashboard({ onLogout }) {
     try {
       const device = getDeviceFingerprint();
 
-      const res = await client.post("/query", { 
+      const res = await client.post("/query", {
         query,
-        device,     // send device fingerprint
+        device,
       });
 
       setResults(res.data);
@@ -31,10 +31,14 @@ export default function Dashboard({ onLogout }) {
   };
 
   return (
-    <div className="dashboard">
-      <div className="header">
-        <h1>Context-Aware DDM Dashboard</h1>
+    <div className="container py-4">
+
+      {/* Header / Navbar */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">Context-Aware DDM Dashboard</h2>
+
         <button
+          className="btn btn-outline-danger"
           onClick={() => {
             localStorage.clear();
             onLogout();
@@ -44,27 +48,39 @@ export default function Dashboard({ onLogout }) {
         </button>
       </div>
 
-      <div>
-        <p>Welcome to the dashboard! You can run SQL queries below.</p>
-        <p>Role: {localStorage.getItem("role")}</p>
+      {/* User info */}
+      <div className="mb-4">
+        <p className="text-muted mb-1">Welcome to the dashboard! You can run SQL queries below.</p>
+        <p className="fw-bold">Role: <span className="text-primary">{localStorage.getItem("role")}</span></p>
       </div>
 
-      <QueryForm onQuery={handleQuery} />
+      {/* Query Form */}
+      <div className="card shadow-sm p-3 mb-4">
+        <h5 className="mb-3">Run SQL Query</h5>
+        <QueryForm onQuery={handleQuery} />
+      </div>
 
-      {loading && <p>Running query...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {/* Loading / Errors */}
+      {loading && <p className="text-info">Running query...</p>}
+      {error && <p className="text-danger fw-bold">{error}</p>}
 
+      {/* Risk Score */}
       {results.risk && (
-        <p>
-          Risk Score:{" "}
-          <strong>{results.risk.threatScore.toFixed(2)}</strong>{" "}
+        <div className="alert alert-secondary mt-3">
+          <strong>Risk Score:</strong>{" "}
+          <span className="fw-bold">{results.risk.threatScore.toFixed(2)}</span>{" "}
           {results.risk.masked && (
-            <span style={{ color: "red" }}>Masking Applied</span>
+            <span className="text-danger ms-2">Masking Applied</span>
           )}
-        </p>
+        </div>
       )}
 
-      <ResultsTable data={results.rows || []} />
+      {/* Results Table */}
+      <div className="card shadow-sm p-3 mt-4">
+        <h5 className="mb-3">Query Results</h5>
+        <ResultsTable data={results.rows || []} />
+      </div>
+
     </div>
   );
 }

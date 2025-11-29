@@ -10,15 +10,20 @@ function QueryForm({ onQuery }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <textarea
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Enter SQL query..."
-        rows={4}
-        style={{ width: "100%", fontFamily: "monospace" }}
-      />
-      <button type="submit" style={{ marginTop: "8px" }}>
+    <form onSubmit={handleSubmit} className="mt-3">
+      <div className="mb-3">
+        <label className="form-label fw-bold">SQL Query</label>
+        <textarea
+          className="form-control"
+          style={{ fontFamily: "monospace", minHeight: "120px" }}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Enter SQL query..."
+          rows={4}
+        />
+      </div>
+
+      <button type="submit" className="btn btn-primary w-100">
         Run Query
       </button>
     </form>
