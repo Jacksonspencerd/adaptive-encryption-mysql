@@ -14,8 +14,8 @@ QUERY_URL = f"{API_BASE}/query"
 REGISTER_URL = f"{API_BASE}/auth/register"
 LOGIN_URL = f"{API_BASE}/auth/login"
 
-N_IDENTITIES = 250              # Number of unique identities to simulate
-N_REQUESTS = 5000               # Total number of query requests to simulate
+N_IDENTITIES = 500              # Number of unique identities to simulate
+N_REQUESTS = 25000              # Total number of query requests to simulate
 ATTACKER_RATE = 0.12            # Proportion of identities that are attackers
 
 # Behavioral tuning
@@ -323,7 +323,6 @@ def evaluate_results(results: List[Dict]) -> None:
     legit = [r for r in results if not r["attacker"]]
 
     attacker_success = sum(1 for r in attackers if r["leaked_sensitive"])
-    false_positives = sum(1 for r in legit if r["leaked_sensitive"])
 
     attackers_flagged = sum(
         1
@@ -334,9 +333,6 @@ def evaluate_results(results: List[Dict]) -> None:
 
     attacker_success_rate = (
         attacker_success / len(attackers) * 100 if attackers else 0
-    )
-    false_positive_rate = (
-        false_positives / len(legit) * 100 if legit else 0
     )
     detection_rate = (
         attackers_flagged / len(attackers) * 100 if attackers else 0
@@ -351,8 +347,6 @@ def evaluate_results(results: List[Dict]) -> None:
 
     print(f"Attacker successes (sensitive data leaked): {attacker_success}")
     print(f"Attacker success rate: {attacker_success_rate:.2f}%")
-    print(f"False positives (legit leaked data): {false_positives}")
-    print(f"False positive rate: {false_positive_rate:.2f}%")
     print(f"Attackers flagged (risk or masking): {attackers_flagged}")
     print(f"Detection rate: {detection_rate:.2f}%\n")
 
@@ -371,17 +365,10 @@ def evaluate_results(results: List[Dict]) -> None:
             if role_attackers
             else 0
         )
-        fp_rate = (
-            sum(1 for r in role_legit if r["leaked_sensitive"])
-            / len(role_legit)
-            * 100
-            if role_legit
-            else 0
-        )
 
         print(
             f"  Role={role}: total={len(subset)}, attackers={len(role_attackers)}, "
-            f"leaks={role_leaks}, attacker_success%={atk_rate:.2f}%, FP%={fp_rate:.2f}%"
+            f"leaks={role_leaks}, attacker_success%={atk_rate:.2f}%"
         )
 
 
