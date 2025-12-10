@@ -1,22 +1,51 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Dec 10, 2025 at 08:50 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
-CREATE DATABASE IF NOT EXISTS caddm_db;
-USE caddm_db;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
-CREATE TABLE IF NOT EXISTS employee_table (
-    id INT PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    ssn VARCHAR(20),
-    race VARCHAR(100),
-    gender VARCHAR(20),
-    email VARCHAR(100),
-    phone VARCHAR(20),
-    department VARCHAR(100),
-    job_title VARCHAR(100),
-    salary INT
-);
 
-INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email, phone, department, job_title, salary) VALUES
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `caddm_db`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_table`
+--
+
+CREATE TABLE `employee_table` (
+  `id` int(11) NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `ssn` varchar(20) DEFAULT NULL,
+  `race` varchar(100) DEFAULT NULL,
+  `gender` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `department` varchar(100) DEFAULT NULL,
+  `job_title` varchar(100) DEFAULT NULL,
+  `salary` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employee_table`
+--
+
+INSERT INTO `employee_table` (`id`, `first_name`, `last_name`, `ssn`, `race`, `gender`, `email`, `phone`, `department`, `job_title`, `salary`) VALUES
 (1, 'Albrecht', 'Buy', '789-16-7481', 'Cuban', 'Male', 'abuy0@auda.org.au', '508-622-7584', 'Business Development', 'Senior Developer', 115108),
 (2, 'Brody', 'Pleaden', '277-52-7482', 'Paraguayan', 'Male', 'bpleaden1@smugmug.com', '934-342-8107', 'Marketing', 'Actuary', 69355),
 (3, 'Tamma', 'Pinnegar', '846-81-0815', 'Black or African American', 'Female', 'tpinnegar2@cdc.gov', '243-814-5111', 'Product Management', 'Analog Circuit Design manager', 166334),
@@ -108,7 +137,7 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (89, 'Fairfax', 'Renvoys', '184-05-6700', 'Lumbee', 'Male', 'frenvoys2g@baidu.com', '711-993-1301', 'Services', 'Programmer III', 156807),
 (90, 'Janene', 'Kemitt', '595-77-2271', 'Iroquois', 'Female', 'jkemitt2h@ning.com', '351-820-7732', 'Sales', 'Recruiting Manager', 56959),
 (91, 'Martica', 'Proffitt', '841-83-1824', 'Potawatomi', 'Female', 'mproffitt2i@twitpic.com', '338-662-8020', 'Sales', 'VP Sales', 218547),
-(92, 'Marlo', 'McIlwraith', '668-01-6595', 'Tohono O''Odham', 'Male', 'mmcilwraith2j@shinystat.com', '346-162-8625', 'Training', 'Clinical Specialist', 199407),
+(92, 'Marlo', 'McIlwraith', '668-01-6595', 'Tohono O\'Odham', 'Male', 'mmcilwraith2j@shinystat.com', '346-162-8625', 'Training', 'Clinical Specialist', 199407),
 (93, 'Kathie', 'Haddleston', '521-48-1113', 'Bolivian', 'Female', 'khaddleston2k@merriam-webster.com', '135-907-4860', 'Business Development', 'Assistant Professor', 187520),
 (94, 'Miquela', 'Parren', '774-67-4424', 'Costa Rican', 'Female', 'mparren2l@mysql.com', '211-841-7761', 'Human Resources', 'Human Resources Assistant II', 121180),
 (95, 'Wald', 'De Freyne', '166-41-9222', 'Asian', 'Male', 'wdefreyne2m@fda.gov', '742-559-0494', 'Marketing', 'Technical Writer', 99267),
@@ -227,7 +256,7 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (208, 'Melody', 'Tonnesen', '620-59-7576', 'Indonesian', 'Female', 'mtonnesen5r@bbb.org', '929-941-2406', 'Marketing', 'Payment Adjustment Coordinator', 250460),
 (209, 'Jodee', 'Janicek', '292-38-2590', 'Blackfeet', 'Female', 'jjanicek5s@newsvine.com', '672-495-0529', 'Business Development', 'Product Engineer', 292501),
 (210, 'Mike', 'Willavoys', '104-56-8102', 'Melanesian', 'Male', 'mwillavoys5t@google.cn', '660-801-2346', 'Training', 'Structural Analysis Engineer', 185234),
-(211, 'Valerie', 'O''Corrin', '141-03-1306', 'Paiute', 'Non-binary', 'vocorrin5u@photobucket.com', '869-248-8940', 'Support', 'Developer IV', 214822),
+(211, 'Valerie', 'O\'Corrin', '141-03-1306', 'Paiute', 'Non-binary', 'vocorrin5u@photobucket.com', '869-248-8940', 'Support', 'Developer IV', 214822),
 (212, 'Rosalind', 'Caughan', '404-48-8224', 'Houma', 'Female', 'rcaughan5v@phpbb.com', '471-986-0865', 'Services', 'Recruiting Manager', 194703),
 (213, 'Rip', 'Tift', '778-44-4978', 'Nicaraguan', 'Male', 'rtift5w@wp.com', '768-860-9732', 'Business Development', 'Cost Accountant', 229543),
 (214, 'Aleksandr', 'Ramsby', '335-74-8047', 'Salvadoran', 'Male', 'aramsby5x@blogger.com', '891-666-0743', 'Research and Development', 'Business Systems Development Analyst', 125979),
@@ -309,7 +338,7 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (290, 'Martin', 'Johl', '359-78-8910', 'Colombian', 'Male', 'mjohl81@mtv.com', '553-314-3776', 'Sales', 'Recruiting Manager', 133601),
 (291, 'Ignazio', 'Garrett', '711-01-0317', 'Panamanian', 'Male', 'igarrett82@deviantart.com', '975-326-8158', 'Engineering', 'Sales Representative', 36921),
 (292, 'Jamie', 'McLennan', '894-19-9506', 'Seminole', 'Male', 'jmclennan83@google.ca', '178-987-8566', 'Engineering', 'Sales Representative', 241727),
-(293, 'Willette', 'O''Concannon', '549-04-1845', 'Asian', 'Female', 'woconcannon84@opensource.org', '957-467-8897', 'Accounting', 'Systems Administrator II', 207411),
+(293, 'Willette', 'O\'Concannon', '549-04-1845', 'Asian', 'Female', 'woconcannon84@opensource.org', '957-467-8897', 'Accounting', 'Systems Administrator II', 207411),
 (294, 'Petrina', 'Stonier', '454-31-2675', 'Samoan', 'Female', 'pstonier85@nba.com', '781-445-4074', 'Research and Development', 'Administrative Officer', 50323),
 (295, 'Sharon', 'Ziems', '824-42-2519', 'Cherokee', 'Female', 'sziems86@upenn.edu', '775-427-6872', 'Accounting', 'Desktop Support Technician', 285650),
 (296, 'Durward', 'Trimmill', '389-47-8084', 'Paiute', 'Male', 'dtrimmill87@gravatar.com', '583-987-3328', 'Business Development', 'Operator', 188406),
@@ -344,7 +373,8 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (325, 'Filip', 'Wavell', '532-75-7086', 'Yuman', 'Male', 'fwavell90@utexas.edu', '126-590-7201', 'Marketing', 'Financial Analyst', 298438),
 (326, 'Vanya', 'Fone', '425-08-4206', 'Tlingit-Haida', 'Female', 'vfone91@alexa.com', '508-787-2230', 'Human Resources', 'Design Engineer', 157690),
 (327, 'Bree', 'Groundwator', '240-97-0930', 'Delaware', 'Female', 'bgroundwator92@wikipedia.org', '576-112-2328', 'Training', 'Accountant IV', 67219),
-(328, 'Christos', 'Brosoli', '269-34-3862', 'Shoshone', 'Male', 'cbrosoli93@virginia.edu', '253-100-5893', 'Training', 'Structural Analysis Engineer', 224033),
+(328, 'Christos', 'Brosoli', '269-34-3862', 'Shoshone', 'Male', 'cbrosoli93@virginia.edu', '253-100-5893', 'Training', 'Structural Analysis Engineer', 224033);
+INSERT INTO `employee_table` (`id`, `first_name`, `last_name`, `ssn`, `race`, `gender`, `email`, `phone`, `department`, `job_title`, `salary`) VALUES
 (329, 'Winnah', 'Roe', '499-73-2129', 'Black or African American', 'Female', 'wroe94@amazon.co.uk', '779-917-9033', 'Legal', 'Tax Accountant', 148944),
 (330, 'Noll', 'Dulany', '608-09-7711', 'Blackfeet', 'Male', 'ndulany95@toplist.cz', '576-787-1382', 'Legal', 'Account Executive', 112082),
 (331, 'Bard', 'Kinnerk', '570-28-0415', 'Delaware', 'Male', 'bkinnerk96@census.gov', '544-832-3454', 'Product Management', 'Software Test Engineer I', 219500),
@@ -407,7 +437,7 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (388, 'Shannen', 'Spikins', '488-01-3710', 'Shoshone', 'Female', 'sspikinsar@dell.com', '987-774-9722', 'Marketing', 'Senior Sales Associate', 134805),
 (389, 'Will', 'Hallock', '555-17-2431', 'Potawatomi', 'Male', 'whallockas@epa.gov', '347-802-4365', 'Product Management', 'Budget/Accounting Analyst IV', 95403),
 (390, 'Lion', 'MacGilmartin', '822-47-7668', 'Chamorro', 'Male', 'lmacgilmartinat@oaic.gov.au', '699-915-6706', 'Services', 'Technical Writer', 70963),
-(391, 'Erhard', 'O'' Cloney', '425-13-7380', 'Korean', 'Male', 'eocloneyau@friendfeed.com', '456-601-0598', 'Support', 'Graphic Designer', 52897),
+(391, 'Erhard', 'O\' Cloney', '425-13-7380', 'Korean', 'Male', 'eocloneyau@friendfeed.com', '456-601-0598', 'Support', 'Graphic Designer', 52897),
 (392, 'Nat', 'Riolfi', '129-69-2951', 'Delaware', 'Polygender', 'nriolfiav@home.pl', '856-736-7602', 'Sales', 'VP Marketing', 166488),
 (393, 'Linus', 'Cash', '139-27-6864', 'Native Hawaiian and Other Pacific Islander (NHPI)', 'Male', 'lcashaw@cnbc.com', '566-191-1919', 'Legal', 'Associate Professor', 172553),
 (394, 'Reiko', 'Cline', '452-83-4749', 'Shoshone', 'Female', 'rclineax@goo.gl', '741-816-8659', 'Support', 'Systems Administrator IV', 292872),
@@ -577,7 +607,7 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (558, 'Chrisse', 'McGeady', '594-23-9145', 'Alaskan Athabascan', 'Male', 'cmcgeadyfh@cmu.edu', '697-707-9244', 'Accounting', 'Graphic Designer', 235910),
 (559, 'Elwood', 'Donkersley', '268-47-8727', 'Costa Rican', 'Male', 'edonkersleyfi@unesco.org', '664-376-8213', 'Product Management', 'Marketing Manager', 169834),
 (560, 'Murray', 'Hughs', '156-46-6163', 'Nicaraguan', 'Male', 'mhughsfj@tinypic.com', '560-636-3273', 'Legal', 'Marketing Assistant', 55843),
-(561, 'Kala', 'O''Logan', '400-75-7478', 'Salvadoran', 'Female', 'kologanfk@hao123.com', '989-363-9490', 'Services', 'Systems Administrator III', 51553),
+(561, 'Kala', 'O\'Logan', '400-75-7478', 'Salvadoran', 'Female', 'kologanfk@hao123.com', '989-363-9490', 'Services', 'Systems Administrator III', 51553),
 (562, 'Devina', 'Alvarado', '677-58-8931', 'Laotian', 'Non-binary', 'dalvaradofl@icio.us', '700-507-7072', 'Marketing', 'Statistician IV', 135215),
 (563, 'Bellanca', 'Scrauniage', '133-46-3742', 'Paiute', 'Female', 'bscrauniagefm@booking.com', '592-111-7150', 'Marketing', 'Human Resources Manager', 232205),
 (564, 'Gwenora', 'Blacksland', '679-37-3693', 'Comanche', 'Female', 'gblackslandfn@w3.org', '331-593-3702', 'Marketing', 'Biostatistician I', 278572),
@@ -667,11 +697,12 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (648, 'Twila', 'Germon', '465-71-3280', 'Micronesian', 'Female', 'tgermonhz@marketwatch.com', '173-369-8917', 'Support', 'VP Quality Control', 192054),
 (649, 'Sebastien', 'Bratley', '510-26-9432', 'White', 'Male', 'sbratleyi0@prweb.com', '957-896-6282', 'Business Development', 'Operator', 246920),
 (650, 'Sawyer', 'Redbourn', '510-38-0240', 'Yuman', 'Male', 'sredbourni1@cam.ac.uk', '118-483-7821', 'Sales', 'Computer Systems Analyst II', 149020),
-(651, 'Matty', 'Pumfrett', '557-91-0499', 'Tohono O''Odham', 'Male', 'mpumfretti2@cbslocal.com', '979-253-6104', 'Accounting', 'Senior Sales Associate', 267856),
+(651, 'Matty', 'Pumfrett', '557-91-0499', 'Tohono O\'Odham', 'Male', 'mpumfretti2@cbslocal.com', '979-253-6104', 'Accounting', 'Senior Sales Associate', 267856),
 (652, 'Aldon', 'Nerheny', '674-07-4928', 'Eskimo', 'Male', 'anerhenyi3@seesaa.net', '633-645-8925', 'Marketing', 'Programmer II', 56724),
 (653, 'Rosella', 'Patise', '321-81-0128', 'Puerto Rican', 'Female', 'rpatisei4@oracle.com', '400-355-5182', 'Support', 'Design Engineer', 275525),
-(654, 'Sammy', 'Stubbings', '547-29-4435', 'Taiwanese', 'Female', 'sstubbingsi5@phpbb.com', '829-960-4637', 'Legal', 'Assistant Manager', 75683),
-(655, 'Row', 'O''Hanlon', '623-03-6517', 'Mexican', 'Female', 'rohanloni6@symantec.com', '757-888-5005', 'Training', 'Senior Cost Accountant', 212473),
+(654, 'Sammy', 'Stubbings', '547-29-4435', 'Taiwanese', 'Female', 'sstubbingsi5@phpbb.com', '829-960-4637', 'Legal', 'Assistant Manager', 75683);
+INSERT INTO `employee_table` (`id`, `first_name`, `last_name`, `ssn`, `race`, `gender`, `email`, `phone`, `department`, `job_title`, `salary`) VALUES
+(655, 'Row', 'O\'Hanlon', '623-03-6517', 'Mexican', 'Female', 'rohanloni6@symantec.com', '757-888-5005', 'Training', 'Senior Cost Accountant', 212473),
 (656, 'Eb', 'Grabban', '382-39-2015', 'Taiwanese', 'Male', 'egrabbani7@lulu.com', '621-681-9579', 'Services', 'Chief Design Engineer', 224764),
 (657, 'Jaymie', 'Bernaciak', '776-22-9604', 'Ecuadorian', 'Male', 'jbernaciaki8@facebook.com', '465-650-4780', 'Marketing', 'VP Marketing', 76003),
 (658, 'Reg', 'Bremmer', '593-44-8444', 'Chinese', 'Male', 'rbremmeri9@wikipedia.org', '197-599-9060', 'Engineering', 'Safety Technician IV', 254599),
@@ -696,7 +727,7 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (677, 'Garvy', 'Baird', '529-50-7813', 'South American', 'Non-binary', 'gbairdis@artisteer.com', '267-220-4245', 'Services', 'Community Outreach Specialist', 118385),
 (678, 'Cam', 'Pamphilon', '656-09-7440', 'Apache', 'Male', 'cpamphilonit@npr.org', '391-742-5996', 'Sales', 'Teacher', 77648),
 (679, 'Conn', 'Studman', '504-51-6299', 'American Indian', 'Bigender', 'cstudmaniu@ezinearticles.com', '565-686-7575', 'Human Resources', 'Recruiting Manager', 85016),
-(680, 'Kanya', 'O''Looney', '711-79-8141', 'Yakama', 'Female', 'kolooneyiv@wix.com', '725-936-4093', 'Legal', 'Structural Analysis Engineer', 282371),
+(680, 'Kanya', 'O\'Looney', '711-79-8141', 'Yakama', 'Female', 'kolooneyiv@wix.com', '725-936-4093', 'Legal', 'Structural Analysis Engineer', 282371),
 (681, 'Davey', 'Southan', '422-60-9496', 'Peruvian', 'Male', 'dsouthaniw@google.co.uk', '803-997-3653', 'Training', 'Recruiting Manager', 163421),
 (682, 'Nonnah', 'Ferran', '222-51-7723', 'Mexican', 'Female', 'nferranix@spotify.com', '140-862-5780', 'Sales', 'Statistician III', 81013),
 (683, 'Marni', 'Braybrooks', '676-62-1386', 'Paiute', 'Female', 'mbraybrooksiy@free.fr', '784-320-7951', 'Sales', 'Web Developer IV', 268234),
@@ -732,7 +763,7 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (713, 'Clemmie', 'Skewis', '602-21-2983', 'Pueblo', 'Genderfluid', 'cskewisjs@theglobeandmail.com', '726-412-7022', 'Product Management', 'Nuclear Power Engineer', 228659),
 (714, 'Stearne', 'Eilert', '801-13-2282', 'Yakama', 'Male', 'seilertjt@blogtalkradio.com', '696-559-3482', 'Training', 'Tax Accountant', 108130),
 (715, 'Jesus', 'Ready', '410-74-6752', 'Indonesian', 'Male', 'jreadyju@dion.ne.jp', '987-873-8286', 'Human Resources', 'Accounting Assistant I', 270930),
-(716, 'Petronille', 'O''Hanlon', '364-45-2548', 'Chamorro', 'Female', 'pohanlonjv@arstechnica.com', '373-891-0186', 'Business Development', 'Accountant I', 147900),
+(716, 'Petronille', 'O\'Hanlon', '364-45-2548', 'Chamorro', 'Female', 'pohanlonjv@arstechnica.com', '373-891-0186', 'Business Development', 'Accountant I', 147900),
 (717, 'Estrellita', 'Kliement', '152-02-4816', 'Lumbee', 'Female', 'ekliementjw@prlog.org', '290-474-9575', 'Marketing', 'Accountant IV', 145066),
 (718, 'Octavius', 'Frostick', '671-72-9920', 'Native Hawaiian and Other Pacific Islander (NHPI)', 'Male', 'ofrostickjx@weebly.com', '859-740-6641', 'Legal', 'Research Associate', 188331),
 (719, 'Marcelline', 'Maton', '474-48-3025', 'Chippewa', 'Female', 'mmatonjy@hexun.com', '864-998-8106', 'Services', 'Quality Engineer', 233105),
@@ -762,7 +793,7 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (743, 'Ellsworth', 'Luney', '180-32-5378', 'Venezuelan', 'Male', 'eluneykm@cbc.ca', '456-287-5065', 'Marketing', 'Editor', 184490),
 (744, 'Ab', 'Roulston', '201-04-9146', 'Ecuadorian', 'Male', 'aroulstonkn@sina.com.cn', '172-399-3754', 'Services', 'Account Coordinator', 51119),
 (745, 'Alyson', 'Deeks', '869-19-6761', 'Guamanian', 'Female', 'adeeksko@istockphoto.com', '901-637-6790', 'Accounting', 'Executive Secretary', 173347),
-(746, 'Fanni', 'O''Kennedy', '404-78-5543', 'Polynesian', 'Female', 'fokennedykp@cnet.com', '256-197-7667', 'Human Resources', 'Paralegal', 96502),
+(746, 'Fanni', 'O\'Kennedy', '404-78-5543', 'Polynesian', 'Female', 'fokennedykp@cnet.com', '256-197-7667', 'Human Resources', 'Paralegal', 96502),
 (747, 'Skipper', 'Hackleton', '279-87-1511', 'Taiwanese', 'Male', 'shackletonkq@imgur.com', '316-196-5533', 'Human Resources', 'Recruiter', 218506),
 (748, 'Jacklin', 'Ferries', '180-07-0083', 'Pakistani', 'Female', 'jferrieskr@ed.gov', '627-189-2441', 'Research and Development', 'Systems Administrator II', 248888),
 (749, 'Judye', 'Cowey', '335-01-9652', 'Bolivian', 'Genderfluid', 'jcoweyks@163.com', '972-357-4594', 'Support', 'Payment Adjustment Coordinator', 204743),
@@ -790,7 +821,7 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (771, 'Melita', 'Fareweather', '390-99-6783', 'Pakistani', 'Female', 'mfareweatherle@skype.com', '448-470-9929', 'Human Resources', 'Operator', 261127),
 (772, 'Bennie', 'Crotch', '100-30-3095', 'Nicaraguan', 'Female', 'bcrotchlf@walmart.com', '288-725-0759', 'Business Development', 'Dental Hygienist', 230057),
 (773, 'Leonid', 'Towell', '624-47-9333', 'Guatemalan', 'Male', 'ltowelllg@gizmodo.com', '877-851-3313', 'Support', 'Information Systems Manager', 128845),
-(774, 'Collette', 'Goodred', '121-35-4215', 'Tohono O''Odham', 'Female', 'cgoodredlh@businessweek.com', '867-904-7478', 'Product Management', 'Health Coach III', 242094),
+(774, 'Collette', 'Goodred', '121-35-4215', 'Tohono O\'Odham', 'Female', 'cgoodredlh@businessweek.com', '867-904-7478', 'Product Management', 'Health Coach III', 242094),
 (775, 'Yehudi', 'Jandera', '543-13-1288', 'Cree', 'Male', 'yjanderali@bing.com', '449-587-7538', 'Human Resources', 'Product Engineer', 79004),
 (776, 'Kendal', 'Bader', '525-82-1056', 'Guamanian', 'Bigender', 'kbaderlj@wikimedia.org', '718-571-1173', 'Services', 'Recruiter', 285986),
 (777, 'Mariette', 'Jime', '544-50-0023', 'Navajo', 'Female', 'mjimelk@studiopress.com', '571-520-1618', 'Business Development', 'Financial Advisor', 225829),
@@ -862,17 +893,17 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (843, 'Alix', 'Duran', '705-39-6486', 'Navajo', 'Male', 'aduranne@ucsd.edu', '757-631-1841', 'Services', 'Statistician II', 47294),
 (844, 'Fremont', 'Wapple', '449-84-7775', 'Choctaw', 'Male', 'fwapplenf@squarespace.com', '673-724-1536', 'Sales', 'Environmental Tech', 52126),
 (845, 'Dougie', 'Pakenham', '654-96-7916', 'Latin American Indian', 'Male', 'dpakenhamng@prlog.org', '392-814-1080', 'Research and Development', 'Chemical Engineer', 228321),
-(846, 'Konstantine', 'Anthonsen', '847-32-6927', 'Tohono O''Odham', 'Male', 'kanthonsennh@ox.ac.uk', '269-790-8854', 'Product Management', 'Payment Adjustment Coordinator', 113106),
+(846, 'Konstantine', 'Anthonsen', '847-32-6927', 'Tohono O\'Odham', 'Male', 'kanthonsennh@ox.ac.uk', '269-790-8854', 'Product Management', 'Payment Adjustment Coordinator', 113106),
 (847, 'Janeczka', 'Wilstead', '426-29-0729', 'Guatemalan', 'Female', 'jwilsteadni@hhs.gov', '713-264-0018', 'Support', 'Senior Sales Associate', 88400),
 (848, 'Larissa', 'Sutherley', '494-37-4051', 'Malaysian', 'Female', 'lsutherleynj@joomla.org', '142-714-8477', 'Engineering', 'Dental Hygienist', 213250),
 (849, 'Ammamaria', 'Utteridge', '451-49-3086', 'Chinese', 'Female', 'autteridgenk@ebay.com', '225-985-1924', 'Legal', 'Marketing Assistant', 198771),
 (850, 'Nobie', 'Ashworth', '548-53-4432', 'Choctaw', 'Male', 'nashworthnl@etsy.com', '884-852-6066', 'Research and Development', 'Clinical Specialist', 162134),
 (851, 'Hubie', 'Phelps', '846-78-6992', 'Apache', 'Bigender', 'hphelpsnm@tuttocitta.it', '158-707-0826', 'Sales', 'Technical Writer', 153756),
 (852, 'Isaak', 'Elgram', '618-25-8011', 'Chickasaw', 'Male', 'ielgramnn@xing.com', '760-666-3701', 'Marketing', 'VP Product Management', 72124),
-(853, 'Morgan', 'Notti', '372-54-9383', 'Tohono O''Odham', 'Female', 'mnottino@newsvine.com', '238-929-5714', 'Support', 'Clinical Specialist', 242778),
+(853, 'Morgan', 'Notti', '372-54-9383', 'Tohono O\'Odham', 'Female', 'mnottino@newsvine.com', '238-929-5714', 'Support', 'Clinical Specialist', 242778),
 (854, 'Isiahi', 'Hilley', '249-63-9585', 'Lumbee', 'Male', 'ihilleynp@reddit.com', '106-819-2403', 'Research and Development', 'Legal Assistant', 104468),
 (855, 'Holly', 'Mityushin', '585-21-0919', 'Potawatomi', 'Female', 'hmityushinnq@oakley.com', '793-589-3781', 'Business Development', 'Accounting Assistant I', 59039),
-(856, 'Boonie', 'O'' Borne', '638-91-8438', 'Seminole', 'Male', 'bobornenr@google.com.hk', '407-834-8616', 'Legal', 'Legal Assistant', 266836),
+(856, 'Boonie', 'O\' Borne', '638-91-8438', 'Seminole', 'Male', 'bobornenr@google.com.hk', '407-834-8616', 'Legal', 'Legal Assistant', 266836),
 (857, 'Zelma', 'Klimp', '535-40-7385', 'Mexican', 'Female', 'zklimpns@archive.org', '537-271-2461', 'Engineering', 'Assistant Professor', 243441),
 (858, 'Cyril', 'Rummings', '316-55-0437', 'Taiwanese', 'Male', 'crummingsnt@bloglines.com', '765-221-1613', 'Marketing', 'Administrative Assistant I', 129593),
 (859, 'Katy', 'Adiscot', '726-55-0223', 'Alaska Native', 'Female', 'kadiscotnu@zimbio.com', '958-758-3050', 'Product Management', 'Registered Nurse', 225174),
@@ -1000,9 +1031,10 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (981, 'Giffer', 'Mateos', '440-92-4145', 'Cheyenne', 'Male', 'gmateosr8@reuters.com', '882-943-0785', 'Accounting', 'General Manager', 72007),
 (982, 'Pepe', 'Liversley', '454-77-2166', 'Ottawa', 'Male', 'pliversleyr9@si.edu', '876-145-5943', 'Training', 'Quality Engineer', 204537),
 (983, 'Win', 'Ingleton', '375-68-2366', 'Colombian', 'Male', 'wingletonra@fda.gov', '234-428-6939', 'Engineering', 'Staff Scientist', 145287),
-(984, 'Madlin', 'Spracklin', '216-79-6376', 'Vietnamese', 'Female', 'mspracklinrb@dailymail.co.uk', '321-236-6902', 'Research and Development', 'Payment Adjustment Coordinator', 109438),
+(984, 'Madlin', 'Spracklin', '216-79-6376', 'Vietnamese', 'Female', 'mspracklinrb@dailymail.co.uk', '321-236-6902', 'Research and Development', 'Payment Adjustment Coordinator', 109438);
+INSERT INTO `employee_table` (`id`, `first_name`, `last_name`, `ssn`, `race`, `gender`, `email`, `phone`, `department`, `job_title`, `salary`) VALUES
 (985, 'Isis', 'Nance', '677-95-5896', 'Shoshone', 'Female', 'inancerc@youtube.com', '727-622-2837', 'Legal', 'Business Systems Development Analyst', 193912),
-(986, 'Francklyn', 'Adel', '171-47-7951', 'Tohono O''Odham', 'Male', 'fadelrd@who.int', '568-279-7679', 'Business Development', 'Sales Representative', 230096),
+(986, 'Francklyn', 'Adel', '171-47-7951', 'Tohono O\'Odham', 'Male', 'fadelrd@who.int', '568-279-7679', 'Business Development', 'Sales Representative', 230096),
 (987, 'Godiva', 'Petigrew', '637-21-8694', 'Houma', 'Female', 'gpetigrewre@independent.co.uk', '373-656-8811', 'Sales', 'Web Designer II', 230697),
 (988, 'Jaime', 'Pimblott', '187-75-5405', 'Asian Indian', 'Male', 'jpimblottrf@yelp.com', '291-660-6247', 'Accounting', 'Assistant Manager', 172519),
 (989, 'Jacquette', 'Mosedale', '451-94-7624', 'Japanese', 'Female', 'jmosedalerg@com.com', '286-874-3394', 'Business Development', 'Executive Secretary', 186303),
@@ -1017,3 +1049,118 @@ INSERT INTO employee_table (id, first_name, last_name, ssn, race, gender, email,
 (998, 'Lizette', 'Rosenau', '114-90-8574', 'Uruguayan', 'Female', 'lrosenaurp@imgur.com', '340-491-7727', 'Engineering', 'Senior Sales Associate', 265032),
 (999, 'Chloris', 'Abelov', '211-12-7297', 'Fijian', 'Female', 'cabelovrq@salon.com', '221-360-2475', 'Research and Development', 'Assistant Media Planner', 269942),
 (1000, 'Noble', 'Pauletto', '380-71-1018', 'Chinese', 'Male', 'npaulettorr@slashdot.org', '228-396-4171', 'Services', 'Environmental Tech', 57467);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `login_audit`
+--
+
+CREATE TABLE `login_audit` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `success` tinyint(1) DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `role` enum('admin','analyst','user','guest','threat') DEFAULT 'guest',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_devices`
+--
+
+CREATE TABLE `user_devices` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `device_hash` varchar(128) NOT NULL,
+  `last_seen` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `employee_table`
+--
+ALTER TABLE `employee_table`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `login_audit`
+--
+ALTER TABLE `login_audit`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_login_user_time` (`user_id`,`timestamp`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
+
+--
+-- Indexes for table `user_devices`
+--
+ALTER TABLE `user_devices`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_user_devices_user` (`user_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `login_audit`
+--
+ALTER TABLE `login_audit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_devices`
+--
+ALTER TABLE `user_devices`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `login_audit`
+--
+ALTER TABLE `login_audit`
+  ADD CONSTRAINT `login_audit_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `user_devices`
+--
+ALTER TABLE `user_devices`
+  ADD CONSTRAINT `fk_user_devices_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
